@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>แคตตาล็อกเสื้อ — ช่างแม็ก โมดิฟาย</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#f59e0b;--bg:#0d0d0d;--s1:#161616;--s2:#1e1e1e;--b1:#2a2a2a;--t1:#f0ede8;--t2:#999;--t3:#555}
+body{font-family:'Segoe UI',-apple-system,'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh}
+
+/* Header */
+header{background:#111;border-bottom:1px solid #1f1f1f;padding:16px;text-align:center;position:sticky;top:0;z-index:50}
+.brand{font-size:11px;color:var(--t2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.title{font-size:20px;font-weight:800;color:var(--acc)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;background:#111;border-bottom:1px solid #1f1f1f;position:sticky;top:73px;z-index:49}
+.tab{flex:1;padding:13px;text-align:center;font-size:15px;font-weight:600;color:var(--t2);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.tab.active{color:var(--acc);border-bottom-color:var(--acc);background:rgba(245,158,11,.05)}
+
+/* Grid */
+.page{display:none;padding:14px}
+.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:480px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.grid{grid-template-columns:repeat(4,1fr)}}
+
+/* Card */
+.card{border-radius:10px;overflow:hidden;background:var(--s1);border:1px solid var(--b1);cursor:pointer;transition:.2s}
+.card:active{transform:scale(.97)}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#1a1a1a}
+.card-label{padding:7px 9px;font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Lightbox */
+#lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:16px}
+#lb.show{display:flex}
+#lb-img{max-width:100%;max-height:90vh;border-radius:10px;object-fit:contain}
+#lb-close{position:fixed;top:16px;right:20px;background:#222;border:1px solid #333;color:#ddd;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#lb-name{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111;border:1px solid #333;padding:8px 18px;border-radius:20px;font-size:13px;color:var(--t2);white-space:nowrap}
+
+/* Empty state */
+.empty{padding:60px 20px;text-align:center;color:var(--t3)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-sub{font-size:13px;line-height:1.7;margin-top:6px}
+
+/* Count badge */
+.count{font-size:12px;color:var(--t3);padding:10px 14px 4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">ช่างแม็ก โมดิฟาย</div>
+  <div class="title">🖨 แคตตาล็อกเสื้อ</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('short')">เสื้อแขนสั้น</button>
+  <button class="tab" onclick="switchTab('long')">เสื้อแขนยาว</button>
+</div>
+
+<div class="page active" id="page-short">
+  <div class="count" id="count-short"></div>
+  <div class="grid" id="grid-short"></div>
+</div>
+<div class="page" id="page-long">
+  <div class="count" id="count-long"></div>
+  <div class="grid" id="grid-long"></div>
+</div>
+
+<!-- Lightbox -->
+<div id="lb" onclick="closeLB()">
+  <button id="lb-close" onclick="closeLB()">✕</button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-name"></div>
+</div>
+
+<script>
+// ============================================================
+//  ✏️  แก้ตรงนี้ — ใส่ชื่อไฟล์รูปของคุณ
+// ============================================================
+const SHORT = [
+  "images/short/S_7233606.jpg",
+  "images/short/S_7233607.jpg",
+  "images/short/S_7233608.jpg",
+  "images/short/S_7233609.jpg",
+  "images/short/S_7233610.jpg",
+  "images/short/S_7233611.jpg",
+  "images/short/S_7233612.jpg",
+  "images/short/S_7233613.jpg",
+  "images/short/S_7233614.jpg",
+  "images/short/S_7233615.jpg",
+  "images/short/S_7233617.jpg",
+  "images/short/S_7233618.jpg",
+  "images/short/S_7233619.jpg",
+  "images/short/S_7233620.jpg",
+];
+
+const LONG = [
+  // ใส่ชื่อไฟล์แขนยาวตรงนี้ เช่น:
+  // "images/long/L_001.jpg",
+  // "images/long/L_002.jpg",
+];
+// ============================================================
+
+function getName(path){
+  return path.split('/').pop().replace(/\.[^.]+$/,'');
+}
+
+function renderGrid(items, gridId, countId){
+  const grid = document.getElementById(gridId);
+  const countEl = document.getElementById(countId);
+  if(!items.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <div class="empty-icon">📂</div>
+      <div style="font-size:15px;color:#666">ยังไม่มีรูป</div>
+      <div class="empty-sub">เพิ่มรูปในไฟล์ catalogue.html<br>ส่วน LONG = [...]</div>
+    </div>`;
+    countEl.textContent = '';
+    return;
+  }
+  countEl.textContent = `${items.length} แบบ`;
+  grid.innerHTML = items.map((src,i) => `
+    <div class="card" onclick="openLB('${src}','${getName(src)}')">
+      <img src="${src}" alt="${getName(src)}" loading="lazy" onerror="this.style.minHeight='120px'">
+      <div class="card-label">${getName(src)}</div>
+    </div>`).join('');
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(tab==='short'&&i===0)||(tab==='long'&&i===1)));
+  document.getElementById('page-short').classList.toggle('active',tab==='short');
+  document.getElementById('page-long').classList.toggle('active',tab==='long');
+}
+
+function openLB(src,name){
+  document.getElementById('lb-img').src=src;
+  document.getElementById('lb-name').textContent=name;
+  document.getElementById('lb').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeLB(){
+  document.getElementById('lb').classList.remove('show');
+  document.getElementById('lb-img').src='';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLB()});
+
+renderGrid(SHORT,'grid-short','count-short');
+renderGrid(LONG,'grid-long','count-long');
+</script>
+</body>
+</html>
