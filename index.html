@@ -2,440 +2,521 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>OrderPrint — ใบออร์เดอร์เสื้อ</title>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0d0d0d;--surface:#181818;--surface2:#222;--border:#2c2c2c;
-  --text:#f0ede8;--muted:#777;--accent:#f59e0b;--accent2:rgba(245,158,11,.12);
-  --danger:#ef4444;--success:#22c55e;--info:#60a5fa;
-  --r:12px;--r-sm:8px;--r-xs:6px;
+  --bg:#0d0d0d;--s1:#161616;--s2:#1e1e1e;--s3:#252525;
+  --b1:#2a2a2a;--b2:#333;
+  --t1:#f0ede8;--t2:#999;--t3:#666;
+  --acc:#f59e0b;--acc2:rgba(245,158,11,.13);
+  --red:#ef4444;--green:#22c55e;--blue:#60a5fa;
+  --r:12px;--rs:8px
 }
-body{font-family:'Segoe UI',-apple-system,'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-tap-highlight-color:transparent;}
-input,textarea,select{font-family:inherit;font-size:15px;}
-button{cursor:pointer;font-family:inherit;}
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-.fab{position:fixed;bottom:24px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#000;border:none;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(245,158,11,.4);z-index:100;}
+html,body{height:100%;font-family:'Segoe UI',-apple-system,'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1);font-size:15px;line-height:1.5}
+input,select,textarea,button{font-family:inherit;font-size:14px;outline:none}
+button{cursor:pointer}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+#app{display:flex;flex-direction:column;min-height:100vh}
+nav{background:#111;border-bottom:1px solid #1f1f1f;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-shrink:0}
+.logo{font-weight:800;font-size:17px;color:var(--acc);letter-spacing:-.5px}
+.nav-tabs{display:flex;gap:4px}
+.tab{padding:6px 14px;border-radius:6px;border:none;background:transparent;color:#888;font-size:14px;font-weight:500}
+.tab.active{background:var(--acc2);color:var(--acc)}
+main{flex:1;padding:16px;max-width:600px;margin:0 auto;width:100%}
+.page{display:none}
+.page.active{display:block}
+.card{background:var(--s1);border:1px solid var(--s3);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;color:var(--t2);margin-bottom:5px;font-weight:500}
+.inp{width:100%;background:#1a1a1a;border:1px solid var(--b1);border-radius:var(--rs);padding:10px 12px;color:var(--t1);font-size:15px}
+.inp:focus{border-color:var(--acc)}
+.inp::placeholder{color:#444}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.btn{padding:10px 18px;border-radius:var(--rs);border:1px solid var(--b2);background:var(--s2);color:var(--t1);font-size:14px;font-weight:500}
+.btn-acc{padding:12px 24px;border-radius:10px;border:none;background:var(--acc);color:#000;font-size:15px;font-weight:700;width:100%}
+.btn-ghost{padding:8px 14px;border-radius:7px;border:1px solid var(--b1);background:transparent;color:var(--t2);font-size:13px}
+.btn-danger{padding:8px 12px;border-radius:7px;border:1px solid #3a1515;background:transparent;color:var(--red);font-size:13px}
+.btn-info{padding:10px 18px;border-radius:var(--rs);border:1px solid #1e3a5f;background:rgba(96,165,250,.09);color:var(--blue);font-size:14px;font-weight:500}
+.btn-dashed{width:100%;padding:10px;border:1px dashed rgba(245,158,11,.3);border-radius:var(--rs);background:transparent;color:var(--acc);font-size:14px;margin-bottom:14px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:20px;border:1px solid var(--b1);background:transparent;color:var(--t2);font-size:12px;cursor:pointer}
+.chip.on{border-color:var(--acc);background:var(--acc2);color:var(--acc);border-width:1.5px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.stat{background:#111;border-radius:7px;padding:8px;text-align:center}
+.stat-label{font-size:10px;color:var(--t3);margin-bottom:2px}
+.stat-val{font-size:15px;font-weight:700}
+.color-card{background:#1a1a1a;border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.color-card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.color-title{font-size:13px;font-weight:700;color:var(--acc)}
+.img-box{width:80px;height:80px;border:1px dashed var(--b2);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:11px;text-align:center;cursor:pointer;flex-shrink:0;overflow:hidden;line-height:1.4}
+.img-box img{width:100%;height:100%;object-fit:contain}
+.img-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.sz-item{text-align:center}
+.sz-label{font-size:11px;color:var(--t3);margin-bottom:3px}
+.sz-sum{margin-top:9px;padding:8px 10px;background:#111;border-radius:7px;font-size:13px;color:#bbb;line-height:1.8}
+.h-card{background:var(--s1);border:1px solid var(--s3);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.h-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.h-name{font-weight:700;font-size:15px;margin-bottom:2px}
+.h-sub{font-size:12px;color:var(--t3)}
+.h-actions{display:flex;gap:6px;margin-top:10px}
+.h-actions .btn-info,.h-actions .btn{flex:1;text-align:center}
+.alert-ok{padding:11px 14px;border-radius:var(--rs);font-size:13px;font-weight:600;margin-bottom:14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--green)}
+.empty{padding:60px 20px;text-align:center;color:#555}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#222;border:1px solid #333;border-radius:var(--rs);padding:10px 18px;font-size:13px;color:var(--t1);opacity:0;transition:.3s;pointer-events:none;z-index:200;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Print */
 @media print{
-  .no-print{display:none!important;}
-  .print-only{display:block!important;}
-  body{background:#fff!important;color:#000!important;}
-  @page{margin:10mm;}
+  nav,.no-print{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  #print-area{display:block!important}
+  @page{margin:10mm}
 }
-.print-only{display:none;}
+#print-area{display:none}
+.po{background:#fff;color:#111;font-family:'Segoe UI','Noto Sans Thai',sans-serif;padding:14px 16px;max-width:520px;margin:0 auto;border:1px solid #ddd}
+.po-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.po-money{text-align:right;font-size:12px;line-height:1.8}
+.po-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:8px}
+.po-c{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f0f0f0}
+.po-c:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.po-cinner{display:grid;gap:10px}
+.po-cname{font-weight:700;font-size:13px;margin-bottom:4px}
+.po-sleeve{font-size:13px;font-weight:600;margin-bottom:3px}
+.po-sizes{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13px}
+.po-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px}
+.spacer{height:32px}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const {useState,useEffect,useRef} = React;
+<div id="app">
+  <nav>
+    <div class="logo">🖨 OrderPrint</div>
+    <div class="nav-tabs">
+      <button class="tab active" id="tab-form" onclick="G.goPage('form')">+ สร้าง</button>
+      <button class="tab" id="tab-history" onclick="G.goPage('history')">ประวัติ</button>
+    </div>
+  </nav>
+  <main>
+    <!-- FORM -->
+    <div class="page active" id="page-form">
+      <div id="save-alert" style="display:none" class="alert-ok">✅ บันทึกสำเร็จ!</div>
+      <div class="card">
+        <div class="card-title">ข้อมูลร้าน / ลูกค้า</div>
+        <div class="field"><label>ชื่อร้าน / ช่าง</label><input class="inp" id="f-shop" type="text" placeholder="ช่างแม็ก โมดิฟาย"></div>
+        <div class="field"><label>ชื่อลูกค้า / คนงาน</label><input class="inp" id="f-worker" type="text" placeholder="ชื่อลูกค้า"></div>
+        <div class="grid2">
+          <div class="field"><label>วันที่พิมพ์</label><input class="inp" id="f-date" type="text" placeholder="dd/mm/yy"></div>
+          <div class="field"><label>ประเภทแขน</label>
+            <select class="inp" id="f-sleeve" onchange="G.updateSleeveLabels()">
+              <option>แขนยาว</option><option>แขนสั้น</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>น้ำหนักผ้า</label><div class="chips" id="chips-fabric"></div></div>
+      </div>
+      <div id="colors-wrap"></div>
+      <button class="btn-dashed" onclick="G.addColor()">+ เพิ่มสีเสื้อ</button>
+      <div class="card">
+        <div class="card-title">ยอดเงิน</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:#111;border-radius:8px;margin-bottom:11px">
+          <span style="color:var(--t2);font-size:14px">จำนวนเสื้อทั้งหมด</span>
+          <span id="total-count" style="font-size:21px;font-weight:800;color:var(--acc)">0 ตัว</span>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>ยอดรวม (บาท)</label><input class="inp" id="f-price" type="number" inputmode="decimal" placeholder="0" oninput="G.updateStats()"></div>
+          <div class="field"><label>มัดจำ (บาท)</label><input class="inp" id="f-deposit" type="number" inputmode="decimal" placeholder="0" oninput="G.updateStats()"></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-label">ยอดรวม</div><div class="stat-val" id="st-total" style="color:var(--blue)">0</div></div>
+          <div class="stat"><div class="stat-label">มัดจำ</div><div class="stat-val" id="st-dep" style="color:var(--red)">0</div></div>
+          <div class="stat"><div class="stat-label">เหลือยอด</div><div class="stat-val" id="st-bal" style="color:var(--green)">0</div></div>
+        </div>
+      </div>
+      <div class="field"><label>หมายเหตุ</label><textarea class="inp" id="f-notes" rows="2" placeholder="หมายเหตุเพิ่มเติม..." style="resize:vertical"></textarea></div>
+      <button class="btn-acc" id="save-btn" onclick="G.save()">💾 บันทึก + ดูใบออร์เดอร์</button>
+      <div class="spacer"></div>
+    </div>
 
-const SIZES = ['XS','SS','S','M','L','XL','2XL','3XL','4XL'];
-const FABRIC_OPTS = ['100แกรม','110แกรม','120แกรม','130แกรม','150แกรม','180แกรม'];
-const COLOR_SWATCHES = ['ฟ้า','แดง','เขียว','ดำ','ขาว','เหลือง','ส้ม','ม่วง','ชมพู','น้ำเงิน','เทา'];
+    <!-- PREVIEW -->
+    <div class="page" id="page-preview">
+      <div class="alert-ok">✅ บันทึกสำเร็จแล้ว</div>
+      <div class="btn-row">
+        <button class="btn-info" onclick="window.print()">🖨 พิมพ์</button>
+        <button class="btn" onclick="G.editCurrent()">✏️ แก้ไข</button>
+        <button class="btn" onclick="G.newOrder()">+ ใหม่</button>
+      </div>
+      <div style="border:1px solid var(--b1);border-radius:var(--r);overflow:hidden">
+        <div style="background:var(--s1);padding:9px 13px;font-size:12px;color:var(--t3);border-bottom:1px solid var(--b1)">ตัวอย่างใบออร์เดอร์</div>
+        <div style="background:#f8f8f8;padding:4px" id="preview-wrap"></div>
+      </div>
+      <div class="spacer"></div>
+    </div>
 
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+    <!-- HISTORY -->
+    <div class="page" id="page-history">
+      <div style="position:relative;margin-bottom:14px">
+        <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none">🔍</span>
+        <input class="inp" id="search-inp" type="text" placeholder="ค้นหาชื่อลูกค้า, วันที่..." oninput="G.renderHistory()" style="padding-left:32px">
+      </div>
+      <div id="history-count" style="font-size:12px;color:var(--t3);margin-bottom:12px"></div>
+      <div id="history-list"></div>
+      <div class="spacer"></div>
+    </div>
+  </main>
+</div>
+<div id="print-area"></div>
+<div id="toast"></div>
 
-function todayTH(){
-  const d=new Date();
-  const y=(d.getFullYear()+543)%100;
-  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${String(y).padStart(2,'0')}`;
-}
+<script>
+const SIZES=['XS','SS','S','M','L','XL','2XL','3XL','4XL'];
+const FABRICS=['100แกรม','110แกรม','120แกรม','130แกรม','150แกรม','180แกรม'];
+const PRESETS=['ฟ้า','แดง','เขียว','ดำ','ขาว','เหลือง','ส้ม','ม่วง','ชมพู','น้ำเงิน','เทา'];
 
-function newColor(){
-  return{id:uid(),name:'',image:null,sizes:Object.fromEntries(SIZES.map(s=>[s,'']))};
-}
-function newOrder(){
-  return{id:uid(),shopName:'ช่างแม็ก โมดิฟาย',workerName:'',date:todayTH(),sleeveType:'แขนยาว',fabric:'120แกรม',totalPrice:'',deposit:'',notes:'',colors:[newColor()],createdAt:Date.now()};
-}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const pad=n=>String(n).padStart(2,'0');
+const todayTH=()=>{const d=new Date();return`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${pad((d.getFullYear()+543)%100)}`};
+const fmt=n=>Number(n||0).toLocaleString('th-TH');
+const loadDB=()=>{try{return JSON.parse(localStorage.getItem('op2')||'[]')}catch{return[]}};
+const saveDB=d=>{try{localStorage.setItem('op2',JSON.stringify(d))}catch{}};
+const countShirts=o=>o.colors.reduce((s,c)=>s+SIZES.reduce((s2,sz)=>s2+(parseInt(c.sizes[sz])||0),0),0);
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+
 async function compressImg(file){
-  return new Promise(resolve=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=e=>{
       const img=new Image();
       img.onload=()=>{
         const c=document.createElement('canvas');
-        const MAX=480;let w=img.width,h=img.height;
-        if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
-        c.width=w;c.height=h;
-        c.getContext('2d').drawImage(img,0,0,w,h);
-        resolve(c.toDataURL('image/jpeg',.72));
+        const M=480;let w=img.width,h=img.height;
+        if(w>M){h=Math.round(h*M/w);w=M}
+        c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',.72));
       };
       img.src=e.target.result;
     };
-    reader.readAsDataURL(file);
+    r.readAsDataURL(file);
   });
 }
-function saveLS(orders){try{localStorage.setItem('op_orders',JSON.stringify(orders));}catch(e){}}
-function loadLS(){try{return JSON.parse(localStorage.getItem('op_orders'))||[];}catch{return[];}}
-function fmtNum(n){return Number(n||0).toLocaleString('th-TH');}
-function totalShirts(order){return order.colors.reduce((s,c)=>s+SIZES.reduce((s2,sz)=>s2+(parseInt(c.sizes[sz])||0),0),0);}
-function balance(order){return(parseFloat(order.totalPrice)||0)-(parseFloat(order.deposit)||0);}
 
-/* ───── ORDER CARD (print layout) ───── */
-function OrderCard({order}){
-  const total=totalShirts(order);
-  const bal=balance(order);
-  const showSizes=(color)=>SIZES.filter(s=>parseInt(color.sizes[s])>0);
-  return(
-    <div style={{background:'#fff',color:'#111',fontFamily:"'Segoe UI','Noto Sans Thai',sans-serif",padding:'14px 16px',maxWidth:520,margin:'0 auto',border:'1px solid #ddd'}}>
-      {/* Header */}
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
-        <div>
-          <div style={{fontWeight:700,fontSize:13}}>คนงาน {order.workerName||'—'}</div>
-          <div style={{fontSize:12,marginTop:2}}>ช่างแม็ก โมดิฟาย</div>
+const G={
+  orders:loadDB(),
+  viewOrder:null,
+  editId:null,
+  fabric:'120แกรม',
+  colors:[],
+
+  init(){
+    this.newOrder();
+    this.updateHistoryTab();
+  },
+
+  buildFabricChips(){
+    document.getElementById('chips-fabric').innerHTML=
+      FABRICS.map(f=>`<button class="chip${f===this.fabric?' on':''}" onclick="G.setFabric('${f}')">${f}</button>`).join('');
+  },
+  setFabric(f){this.fabric=f;this.buildFabricChips()},
+
+  addColor(){
+    this.colors.push({id:uid(),name:'',image:null,sizes:Object.fromEntries(SIZES.map(s=>[s,'']))});
+    this.renderColors();
+  },
+  removeColor(id){
+    if(this.colors.length<=1){showToast('⚠️ ต้องมีอย่างน้อย 1 สี');return}
+    this.colors=this.colors.filter(c=>c.id!==id);
+    this.renderColors();
+  },
+  setColorName(id,v){
+    const c=this.colors.find(c=>c.id===id);if(!c)return;
+    c.name=v;
+    const inp=document.getElementById('cn-'+id);if(inp)inp.value=v;
+    // refresh chips
+    document.querySelectorAll('#chips-'+id+' .chip').forEach(btn=>{
+      btn.classList.toggle('on',btn.textContent===v);
+    });
+  },
+  setColorImg(id,v){
+    const c=this.colors.find(c=>c.id===id);if(!c)return;
+    c.image=v;
+    const box=document.getElementById('ibox-'+id);
+    if(box)box.innerHTML=v?`<img src="${v}" alt="">`:'อัปโหลด<br>รูปเสื้อ';
+    const del=document.getElementById('idel-'+id);
+    if(del)del.style.display=v?'block':'none';
+  },
+  setSizeVal(id,sz,v){
+    const c=this.colors.find(c=>c.id===id);if(!c)return;
+    c.sizes[sz]=v;
+    this.updateSzSum(id);
+    this.updateTotalCount();
+  },
+  updateSzSum(id){
+    const c=this.colors.find(c=>c.id===id);if(!c)return;
+    const el=document.getElementById('szsum-'+id);if(!el)return;
+    const active=SIZES.filter(s=>parseInt(c.sizes[s])>0);
+    if(!active.length){el.style.display='none';return}
+    const t=active.reduce((s,sz)=>s+(parseInt(c.sizes[sz])||0),0);
+    el.style.display='block';
+    el.innerHTML=active.map(s=>`<strong style="color:var(--acc)">${s}</strong>=${c.sizes[s]}`).join(' &nbsp;')+
+      `&nbsp;&nbsp;<span style="color:var(--t3)">รวม ${t} ตัว</span>`;
+  },
+  updateTotalCount(){
+    const tot=countShirts({colors:this.colors});
+    document.getElementById('total-count').textContent=`${tot} ตัว`;
+    return tot;
+  },
+  updateStats(){
+    const p=parseFloat(document.getElementById('f-price').value)||0;
+    const d=parseFloat(document.getElementById('f-deposit').value)||0;
+    document.getElementById('st-total').textContent=fmt(p);
+    document.getElementById('st-dep').textContent=fmt(d);
+    document.getElementById('st-bal').textContent=fmt(p-d);
+  },
+  updateSleeveLabels(){
+    const v=document.getElementById('f-sleeve').value;
+    this.colors.forEach(c=>{
+      const el=document.getElementById('slbl-'+c.id);
+      if(el)el.textContent=`${v} — กรอกจำนวนต่อไซส์`;
+    });
+  },
+
+  renderColors(){
+    const wrap=document.getElementById('colors-wrap');
+    wrap.innerHTML='';
+    this.colors.forEach((c,i)=>{
+      const div=document.createElement('div');
+      div.className='color-card';
+      const sleeve=document.getElementById('f-sleeve')?.value||'แขนยาว';
+      div.innerHTML=`
+        <div class="color-card-hd">
+          <span class="color-title">สีที่ ${i+1}</span>
+          <button class="btn-danger" onclick="G.removeColor('${c.id}')">ลบ</button>
         </div>
-        <div style={{textAlign:'right',fontSize:12,lineHeight:1.7}}>
-          <div>ยอด<strong style={{color:'#1a56db'}}>{fmtNum(order.totalPrice)}</strong>บาท</div>
-          <div>มัดจำ<strong style={{color:'#e02424'}}>{fmtNum(order.deposit)}</strong>บาท</div>
-          <div>เหลือยอด<strong style={{color:'#057a55'}}>{fmtNum(bal)}</strong>บาท</div>
+        <div class="field" style="margin-bottom:10px">
+          <input class="inp" id="cn-${c.id}" type="text" placeholder="ชื่อสี เช่น ฟ้า / แดง" value="${c.name||''}"
+            oninput="G.colors.find(x=>x.id==='${c.id}').name=this.value;document.querySelectorAll('#chips-${c.id} .chip').forEach(b=>b.classList.toggle('on',b.textContent===this.value))">
         </div>
-      </div>
-      <div style={{display:'flex',gap:20,fontSize:12,marginBottom:8,borderBottom:'1px solid #e5e7eb',paddingBottom:8}}>
-        <div><span style={{color:'#6b7280'}}>วันที่พิมพ์ </span><strong>{order.date}</strong></div>
-        <div><span style={{color:'#6b7280'}}>ประเภท </span><strong>{order.sleeveType} {order.fabric}</strong></div>
-        {order.shopName&&<div><strong>{order.shopName}</strong></div>}
-      </div>
-      {/* Colors */}
-      {order.colors.map((c,i)=>{
-        const activeSizes=showSizes(c);
-        return(
-          <div key={c.id} style={{display:'grid',gridTemplateColumns:c.image?'90px 1fr':'1fr',gap:10,marginBottom:10,paddingBottom:10,borderBottom:i<order.colors.length-1?'1px solid #f0f0f0':'none'}}>
-            {c.image&&<img src={c.image} alt={c.name} style={{width:90,height:90,objectFit:'contain',border:'1px solid #e5e7eb',borderRadius:6}}/>}
-            <div>
-              {c.name&&<div style={{fontWeight:700,fontSize:13,marginBottom:4}}>{c.name}</div>}
-              <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{order.sleeveType}</div>
-              <div style={{display:'flex',flexWrap:'wrap',gap:'4px 10px',fontSize:13}}>
-                {activeSizes.length>0
-                  ?activeSizes.map(s=><span key={s}><strong>{s}</strong>={c.sizes[s]}</span>)
-                  :<span style={{color:'#6b7280',fontSize:12}}>ยังไม่ได้กรอกไซส์</span>}
-              </div>
-            </div>
+        <div class="chips" id="chips-${c.id}" style="margin-bottom:11px">
+          ${PRESETS.map(sw=>`<button class="chip${c.name===sw?' on':''}" onclick="G.setColorName('${c.id}','${sw}')">${sw}</button>`).join('')}
+        </div>
+        <div class="img-row">
+          <div class="img-box" id="ibox-${c.id}" onclick="document.getElementById('fi-${c.id}').click()">
+            ${c.image?`<img src="${c.image}" alt="">`:'อัปโหลด<br>รูปเสื้อ'}
           </div>
-        );
-      })}
-      {/* Footer */}
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:4,fontSize:12}}>
-        {order.notes?<div style={{color:'#4b5563',fontSize:11,maxWidth:'70%'}}>หมายเหตุ: {order.notes}</div>:<div/>}
-        <div style={{fontWeight:800,fontSize:15}}>{total} ตัว</div>
-      </div>
-    </div>
-  );
-}
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn-ghost" onclick="document.getElementById('fi-${c.id}').click()">📷 ${c.image?'เปลี่ยนรูป':'อัปโหลดรูป'}</button>
+            <button class="btn-ghost" id="idel-${c.id}" style="display:${c.image?'block':'none'};color:var(--red);border-color:#3a1515" onclick="G.setColorImg('${c.id}',null)">ลบรูป</button>
+          </div>
+          <input type="file" id="fi-${c.id}" accept="image/*" style="display:none"
+            onchange="(async(e)=>{const f=e.target.files[0];if(f)G.setColorImg('${c.id}',await compressImg(f))})(event)">
+        </div>
+        <div id="slbl-${c.id}" style="font-size:12px;color:var(--t2);margin-bottom:8px;font-weight:500">${sleeve} — กรอกจำนวนต่อไซส์</div>
+        <div class="grid3">
+          ${SIZES.map(sz=>`
+            <div class="sz-item">
+              <div class="sz-label">${sz}</div>
+              <input class="inp" type="number" min="0" inputmode="numeric" value="${c.sizes[sz]||''}"
+                style="text-align:center;padding:8px 4px;font-size:16px"
+                oninput="G.setSizeVal('${c.id}','${sz}',this.value)">
+            </div>`).join('')}
+        </div>
+        <div class="sz-sum" id="szsum-${c.id}" style="display:none"></div>`;
+      wrap.appendChild(div);
+      this.updateSzSum(c.id);
+    });
+    this.updateTotalCount();
+  },
 
-/* ───── NAV ───── */
-function Nav({page,setPage,ordersLen}){
-  const s={
-    nav:{background:'#111',borderBottom:'1px solid #2a2a2a',padding:'0 16px',position:'sticky',top:0,zIndex:50,display:'flex',alignItems:'center',justifyContent:'space-between',height:52,flexShrink:0},
-    logo:{fontWeight:800,fontSize:17,color:'#f59e0b',letterSpacing:'-0.5px'},
-    tabs:{display:'flex',gap:4},
-    tab:{padding:'6px 14px',borderRadius:6,border:'none',background:'transparent',color:'#888',fontSize:14,fontWeight:500},
-    active:{background:'rgba(245,158,11,.15)',color:'#f59e0b'},
-  };
-  return(
-    <nav style={s.nav} className="no-print">
-      <div style={s.logo}>🖨 OrderPrint</div>
-      <div style={s.tabs}>
-        <button style={{...s.tab,...(page==='form'||page==='preview'?s.active:{})}} onClick={()=>setPage('form')}>+ สร้าง</button>
-        <button style={{...s.tab,...(page==='history'?s.active:{})}} onClick={()=>setPage('history')}>
-          ประวัติ{ordersLen>0?` (${ordersLen})`:''}
-        </button>
-      </div>
-    </nav>
-  );
-}
+  collect(){
+    return{
+      id:this.editId||uid(),
+      shopName:document.getElementById('f-shop').value.trim()||'ช่างแม็ก โมดิฟาย',
+      workerName:document.getElementById('f-worker').value.trim(),
+      date:document.getElementById('f-date').value.trim()||todayTH(),
+      sleeveType:document.getElementById('f-sleeve').value,
+      fabric:this.fabric,
+      totalPrice:document.getElementById('f-price').value,
+      deposit:document.getElementById('f-deposit').value,
+      notes:document.getElementById('f-notes').value.trim(),
+      colors:JSON.parse(JSON.stringify(this.colors)),
+      createdAt:this.editId?(this.orders.find(o=>o.id===this.editId)||{}).createdAt||Date.now():Date.now()
+    };
+  },
 
-/* ───── FORM ───── */
-function Field({label,children,hint}){
-  return(
-    <div style={{marginBottom:14}}>
-      <label style={{display:'block',fontSize:12,color:'#888',marginBottom:5,fontWeight:500}}>{label}</label>
-      {children}
-      {hint&&<div style={{fontSize:11,color:'#666',marginTop:3}}>{hint}</div>}
-    </div>
-  );
-}
-const inputStyle={width:'100%',background:'#1e1e1e',border:'1px solid #2e2e2e',borderRadius:8,padding:'10px 12px',color:'#f0ede8',outline:'none',fontSize:15};
-const btnStyle=(variant='default')=>({
-  default:{padding:'10px 18px',borderRadius:8,border:'1px solid #333',background:'#222',color:'#ddd',fontSize:14,fontWeight:500},
-  accent:{padding:'12px 24px',borderRadius:10,border:'none',background:'#f59e0b',color:'#000',fontSize:15,fontWeight:700,width:'100%'},
-  ghost:{padding:'8px 14px',borderRadius:7,border:'1px solid #2a2a2a',background:'transparent',color:'#888',fontSize:13},
-  danger:{padding:'8px 14px',borderRadius:7,border:'1px solid #3a1515',background:'transparent',color:'#ef4444',fontSize:13},
-  info:{padding:'10px 18px',borderRadius:8,border:'1px solid #1e3a5f',background:'rgba(96,165,250,.1)',color:'#60a5fa',fontSize:14,fontWeight:500},
-}[variant]);
+  save(){
+    const o=this.collect();
+    if(this.editId){this.orders=this.orders.map(x=>x.id===this.editId?o:x)}
+    else{this.orders.unshift(o)}
+    saveDB(this.orders);
+    this.viewOrder=o;
+    this.editId=null;
+    this.updateHistoryTab();
+    this.renderPreview(o);
+    this.goPage('preview');
+    showToast(`✅ บันทึกแล้ว — ${countShirts(o)} ตัว`);
+  },
 
-function ColorCard({color,idx,onChange,onSizeChange,onImageUpload,onRemove,canRemove,sleeveType}){
-  const fileRef=useRef();
-  const activeSizes=SIZES.filter(s=>parseInt(color.sizes[s])>0);
-  return(
-    <div style={{background:'#1a1a1a',border:'1px solid #2a2a2a',borderRadius:12,padding:'14px',marginBottom:12}}>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-        <span style={{fontSize:13,fontWeight:600,color:'#f59e0b'}}>สีที่ {idx+1}</span>
-        {canRemove&&<button style={btnStyle('danger')} onClick={onRemove}>ลบ</button>}
-      </div>
-      {/* Color name */}
-      <div style={{display:'flex',gap:8,marginBottom:12}}>
-        <input value={color.name} onChange={e=>onChange('name',e.target.value)} placeholder="ชื่อสี เช่น ฟ้า / แดง / เขียว" style={{...inputStyle,flex:1}}/>
-      </div>
-      {/* Swatches */}
-      <div style={{display:'flex',flexWrap:'wrap',gap:6,marginBottom:12}}>
-        {COLOR_SWATCHES.map(sw=>(
-          <button key={sw} onClick={()=>onChange('name',sw)} style={{padding:'4px 10px',borderRadius:20,border:color.name===sw?'1.5px solid #f59e0b':'1px solid #333',background:color.name===sw?'rgba(245,158,11,.15)':'transparent',color:color.name===sw?'#f59e0b':'#888',fontSize:12}}>{sw}</button>
-        ))}
-      </div>
-      {/* Image upload */}
-      <div style={{marginBottom:12}}>
-        <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={async e=>{if(e.target.files[0])onImageUpload(await compressImg(e.target.files[0]));}}/>
-        <div style={{display:'flex',gap:8,alignItems:'center'}}>
-          {color.image
-            ?<img src={color.image} alt="" style={{width:80,height:80,objectFit:'contain',border:'1px solid #333',borderRadius:8}}/>
-            :<div style={{width:80,height:80,border:'1px dashed #333',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',color:'#555',fontSize:12,textAlign:'center',cursor:'pointer'}} onClick={()=>fileRef.current.click()}>อัปโหลด<br/>รูปเสื้อ</div>}
+  editCurrent(){if(this.viewOrder)this.loadOrderToForm(this.viewOrder)},
+
+  newOrder(){
+    this.editId=null;
+    this.fabric='120แกรม';
+    this.colors=[{id:uid(),name:'',image:null,sizes:Object.fromEntries(SIZES.map(s=>[s,'']))}];
+    ['f-shop','f-worker','f-price','f-deposit','f-notes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-shop').value='ช่างแม็ก โมดิฟาย';
+    document.getElementById('f-date').value=todayTH();
+    document.getElementById('f-sleeve').value='แขนยาว';
+    document.getElementById('save-btn').textContent='💾 บันทึก + ดูใบออร์เดอร์';
+    document.getElementById('save-alert').style.display='none';
+    this.buildFabricChips();
+    this.renderColors();
+    this.updateStats();
+    this.goPage('form');
+  },
+
+  loadOrderToForm(o){
+    this.editId=o.id;
+    this.fabric=o.fabric||'120แกรม';
+    this.colors=JSON.parse(JSON.stringify(o.colors));
+    document.getElementById('f-shop').value=o.shopName||'';
+    document.getElementById('f-worker').value=o.workerName||'';
+    document.getElementById('f-date').value=o.date||'';
+    document.getElementById('f-sleeve').value=o.sleeveType||'แขนยาว';
+    document.getElementById('f-price').value=o.totalPrice||'';
+    document.getElementById('f-deposit').value=o.deposit||'';
+    document.getElementById('f-notes').value=o.notes||'';
+    document.getElementById('save-btn').textContent='💾 บันทึกการแก้ไข';
+    document.getElementById('save-alert').style.display='none';
+    this.buildFabricChips();
+    this.renderColors();
+    this.updateStats();
+    this.goPage('form');
+  },
+
+  buildPO(o){
+    const tot=countShirts(o);
+    const bal=(parseFloat(o.totalPrice)||0)-(parseFloat(o.deposit)||0);
+    const cols=o.colors.map(c=>{
+      const active=SIZES.filter(s=>parseInt(c.sizes[s])>0);
+      return`<div class="po-c">
+        <div class="po-cinner" style="grid-template-columns:${c.image?'94px 1fr':'1fr'}">
+          ${c.image?`<img src="${c.image}" alt="" style="width:88px;height:88px;object-fit:contain;border:1px solid #e5e7eb;border-radius:6px">`:''}
           <div>
-            <button style={btnStyle('ghost')} onClick={()=>fileRef.current.click()}>📷 {color.image?'เปลี่ยนรูป':'อัปโหลดรูป'}</button>
-            {color.image&&<button style={{...btnStyle('ghost'),marginTop:6,display:'block',color:'#ef4444',borderColor:'#3a1515'}} onClick={()=>onChange('image',null)}>ลบรูป</button>}
+            ${c.name?`<div class="po-cname">${c.name}</div>`:''}
+            <div class="po-sleeve">${o.sleeveType}</div>
+            <div class="po-sizes">${active.length?active.map(s=>`<span><strong>${s}</strong>=${c.sizes[s]}</span>`).join(''):'<span style="color:#9ca3af;font-size:12px">ยังไม่ได้กรอกไซส์</span>'}</div>
           </div>
         </div>
-      </div>
-      {/* Sizes */}
-      <div style={{fontSize:12,color:'#888',marginBottom:8,fontWeight:500}}>{sleeveType} — กรอกจำนวนต่อไซส์</div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8}}>
-        {SIZES.map(sz=>(
-          <div key={sz}>
-            <div style={{fontSize:11,color:'#666',marginBottom:3,textAlign:'center'}}>{sz}</div>
-            <input type="number" min="0" inputMode="numeric" value={color.sizes[sz]} onChange={e=>onSizeChange(sz,e.target.value)}
-              style={{...inputStyle,textAlign:'center',padding:'8px 4px',fontSize:16}}/>
-          </div>
-        ))}
-      </div>
-      {activeSizes.length>0&&(
-        <div style={{marginTop:10,padding:'8px 10px',background:'#111',borderRadius:7,fontSize:13,color:'#bbb'}}>
-          {activeSizes.map(s=><span key={s} style={{marginRight:10}}><strong style={{color:'#f59e0b'}}>{s}</strong>={color.sizes[s]}</span>)}
-          <span style={{color:'#666'}}>รวม {activeSizes.reduce((s,sz)=>s+(parseInt(color.sizes[sz])||0),0)} ตัว</span>
+      </div>`;
+    }).join('');
+    return`<div class="po">
+      <div class="po-hd">
+        <div>
+          <div style="font-weight:700;font-size:13px">คนงาน ${o.workerName||'—'}</div>
+          <div style="font-size:11px;margin-top:2px;color:#555">${o.shopName}</div>
         </div>
-      )}
-    </div>
-  );
-}
+        <div class="po-money">
+          <div>ยอด<strong style="color:#1a56db">${fmt(o.totalPrice)}</strong>บาท</div>
+          <div>มัดจำ<strong style="color:#e02424">${fmt(o.deposit)}</strong>บาท</div>
+          <div>เหลือยอด<strong style="color:#057a55">${fmt(bal)}</strong>บาท</div>
+        </div>
+      </div>
+      <div class="po-meta">
+        <span><span style="color:#6b7280">วันที่ </span><strong>${o.date}</strong></span>
+        <span><span style="color:#6b7280">ประเภท </span><strong>${o.sleeveType} ${o.fabric}</strong></span>
+      </div>
+      ${cols}
+      <div class="po-foot">
+        ${o.notes?`<span style="color:#4b5563;font-size:11px;max-width:68%">หมายเหตุ: ${o.notes}</span>`:'<span></span>'}
+        <span style="font-weight:800;font-size:15px">${tot} ตัว</span>
+      </div>
+    </div>`;
+  },
 
-function FormPage({order,setOrder,onSave,isEdit}){
-  function setField(f,v){setOrder(o=>({...o,[f]:v}));}
-  function setColorField(cid,f,v){setOrder(o=>({...o,colors:o.colors.map(c=>c.id===cid?{...c,[f]:v}:c)}));}
-  function setSizeField(cid,sz,v){setOrder(o=>({...o,colors:o.colors.map(c=>c.id===cid?{...c,sizes:{...c.sizes,[sz]:v}}:c)}));}
-  function addColor(){setOrder(o=>({...o,colors:[...o.colors,newColor()]}));}
-  function removeColor(cid){setOrder(o=>({...o,colors:o.colors.filter(c=>c.id!==cid)}));}
-  const tot=totalShirts(order);
-  const bal=balance(order);
-  return(
-    <div style={{padding:'16px',maxWidth:600,margin:'0 auto'}} className="no-print">
-      <div style={{fontSize:13,color:'#666',marginBottom:16}}>{isEdit?'✏️ แก้ไขออร์เดอร์':'📋 ออร์เดอร์ใหม่'}</div>
-      {/* Shop info */}
-      <div style={{background:'#161616',border:'1px solid #252525',borderRadius:12,padding:'14px',marginBottom:12}}>
-        <div style={{fontSize:12,fontWeight:700,color:'#888',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.05em'}}>ข้อมูลร้าน</div>
-        <Field label="ชื่อร้าน / ช่าง"><input value={order.shopName} onChange={e=>setField('shopName',e.target.value)} style={inputStyle}/></Field>
-        <Field label="ชื่อลูกค้า / คนงาน"><input value={order.workerName} onChange={e=>setField('workerName',e.target.value)} placeholder="ชื่อลูกค้า" style={inputStyle}/></Field>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-          <Field label="วันที่พิมพ์"><input value={order.date} onChange={e=>setField('date',e.target.value)} placeholder="dd/mm/yy" style={inputStyle}/></Field>
-          <Field label="ประเภทแขน">
-            <select value={order.sleeveType} onChange={e=>setField('sleeveType',e.target.value)} style={{...inputStyle,appearance:'none'}}>
-              <option>แขนยาว</option><option>แขนสั้น</option>
-            </select>
-          </Field>
-        </div>
-        <Field label="น้ำหนักผ้า">
-          <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-            {FABRIC_OPTS.map(f=>(
-              <button key={f} onClick={()=>setField('fabric',f)} style={{padding:'6px 12px',borderRadius:20,border:order.fabric===f?'1.5px solid #f59e0b':'1px solid #333',background:order.fabric===f?'rgba(245,158,11,.15)':'transparent',color:order.fabric===f?'#f59e0b':'#888',fontSize:13}}>{f}</button>
-            ))}
-          </div>
-        </Field>
-      </div>
-      {/* Colors */}
-      <div style={{marginBottom:4,fontSize:12,fontWeight:700,color:'#888',textTransform:'uppercase',letterSpacing:'0.05em',padding:'0 2px'}}>สีเสื้อ</div>
-      {order.colors.map((c,i)=>(
-        <ColorCard key={c.id} color={c} idx={i} sleeveType={order.sleeveType}
-          onChange={(f,v)=>setColorField(c.id,f,v)}
-          onSizeChange={(sz,v)=>setSizeField(c.id,sz,v)}
-          onImageUpload={v=>setColorField(c.id,'image',v)}
-          onRemove={()=>removeColor(c.id)}
-          canRemove={order.colors.length>1}/>
-      ))}
-      <button style={{...btnStyle('ghost'),width:'100%',marginBottom:16,borderStyle:'dashed',color:'#f59e0b',borderColor:'rgba(245,158,11,.3)'}} onClick={addColor}>+ เพิ่มสี</button>
-      {/* Pricing */}
-      <div style={{background:'#161616',border:'1px solid #252525',borderRadius:12,padding:'14px',marginBottom:16}}>
-        <div style={{fontSize:12,fontWeight:700,color:'#888',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.05em'}}>ยอดเงิน</div>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'8px 10px',background:'#111',borderRadius:8,marginBottom:12}}>
-          <span style={{color:'#888',fontSize:14}}>จำนวนเสื้อทั้งหมด</span>
-          <span style={{fontSize:20,fontWeight:800,color:'#f59e0b'}}>{tot} ตัว</span>
-        </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-          <Field label="ยอดรวม (บาท)"><input type="number" inputMode="decimal" value={order.totalPrice} onChange={e=>setField('totalPrice',e.target.value)} placeholder="0" style={inputStyle}/></Field>
-          <Field label="มัดจำ (บาท)"><input type="number" inputMode="decimal" value={order.deposit} onChange={e=>setField('deposit',e.target.value)} placeholder="0" style={inputStyle}/></Field>
-        </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginTop:4}}>
-          {[['ยอดรวม',order.totalPrice,'#60a5fa'],['มัดจำ',order.deposit,'#ef4444'],['เหลือยอด',bal,'#22c55e']].map(([label,val,color])=>(
-            <div key={label} style={{background:'#111',borderRadius:8,padding:'10px',textAlign:'center'}}>
-              <div style={{fontSize:11,color:'#666',marginBottom:3}}>{label}</div>
-              <div style={{fontSize:16,fontWeight:700,color}}>{fmtNum(val)}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <Field label="หมายเหตุ">
-        <textarea value={order.notes} onChange={e=>setField('notes',e.target.value)} placeholder="หมายเหตุเพิ่มเติม..." rows={2} style={{...inputStyle,resize:'vertical'}}/>
-      </Field>
-      <button style={btnStyle('accent')} onClick={onSave}>{isEdit?'💾 บันทึกการแก้ไข':'💾 บันทึก + ดูใบออร์เดอร์'}</button>
-      <div style={{height:32}}/>
-    </div>
-  );
-}
+  renderPreview(o){
+    const h=this.buildPO(o);
+    document.getElementById('preview-wrap').innerHTML=h;
+    document.getElementById('print-area').innerHTML=h;
+  },
 
-/* ───── PREVIEW ───── */
-function PreviewPage({order,onNew,onEdit,onHistory}){
-  const tot=totalShirts(order);
-  return(
-    <div className="no-print">
-      <div style={{padding:'12px 16px',display:'flex',alignItems:'center',gap:10,background:'rgba(34,197,94,.08)',borderBottom:'1px solid rgba(34,197,94,.15)'}}>
-        <span style={{fontSize:16}}>✅</span>
-        <span style={{color:'#22c55e',fontSize:14,fontWeight:600}}>บันทึกสำเร็จ — {tot} ตัว</span>
-      </div>
-      <div style={{padding:'16px',maxWidth:600,margin:'0 auto'}}>
-        {/* Action buttons */}
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:20}}>
-          <button style={btnStyle('info')} onClick={()=>window.print()}>🖨 พิมพ์</button>
-          <button style={btnStyle('default')} onClick={onEdit}>✏️ แก้ไข</button>
-          <button style={btnStyle('default')} onClick={onNew}>+ ใหม่</button>
-        </div>
-        {/* Preview card */}
-        <div style={{border:'1px solid #2a2a2a',borderRadius:12,overflow:'hidden'}}>
-          <div style={{background:'#1a1a1a',padding:'10px 14px',fontSize:12,color:'#666',borderBottom:'1px solid #222'}}>ตัวอย่างใบออร์เดอร์</div>
-          <div style={{background:'#fff',padding:4}}>
-            <OrderCard order={order}/>
+  updateHistoryTab(){
+    const n=this.orders.length;
+    document.getElementById('tab-history').textContent=n?`ประวัติ (${n})`:'ประวัติ';
+  },
+
+  renderHistory(){
+    const q=(document.getElementById('search-inp').value||'').toLowerCase();
+    const list=q?this.orders.filter(o=>
+      (o.workerName||'').toLowerCase().includes(q)||
+      (o.shopName||'').toLowerCase().includes(q)||
+      (o.date||'').includes(q)
+    ):this.orders;
+    document.getElementById('history-count').textContent=`${list.length} ออร์เดอร์`;
+    const wrap=document.getElementById('history-list');
+    if(!list.length){
+      wrap.innerHTML=`<div class="empty"><div style="font-size:40px;margin-bottom:16px">${q?'🔍':'📋'}</div>
+        <div style="font-size:16px;color:#777;margin-bottom:6px">${q?'ไม่พบผลลัพธ์':'ยังไม่มีออร์เดอร์'}</div>
+        ${!q?`<div style="font-size:13px;margin-bottom:20px">กดปุ่ม + สร้าง เพื่อเริ่มต้น</div><button class="btn-acc" onclick="G.newOrder()">+ สร้างออร์เดอร์แรก</button>`:''}</div>`;
+      return;
+    }
+    wrap.innerHTML=list.map(o=>{
+      const tot=countShirts(o);
+      const bal=(parseFloat(o.totalPrice)||0)-(parseFloat(o.deposit)||0);
+      return`<div class="h-card">
+        <div class="h-card-top">
+          <div>
+            <div class="h-name">${o.workerName||'(ไม่มีชื่อลูกค้า)'}</div>
+            <div class="h-sub">${o.date} · ${o.sleeveType} · ${o.fabric}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:17px;font-weight:800;color:var(--acc)">${tot} ตัว</div>
+            <div style="font-size:12px;color:var(--t3)">${o.colors.length} สี</div>
           </div>
         </div>
-        <div style={{height:24}}/>
-      </div>
-    </div>
-  );
-}
+        <div class="stat-row">
+          <div class="stat"><div class="stat-label">ยอด</div><div class="stat-val" style="color:var(--blue)">${fmt(o.totalPrice)}</div></div>
+          <div class="stat"><div class="stat-label">มัด</div><div class="stat-val" style="color:var(--red)">${fmt(o.deposit)}</div></div>
+          <div class="stat"><div class="stat-label">เหลือ</div><div class="stat-val" style="color:var(--green)">${fmt(bal)}</div></div>
+        </div>
+        <div class="h-actions">
+          <button class="btn-info" onclick="G.viewFromHistory('${o.id}')">👁 ดูใบ</button>
+          <button class="btn" onclick="G.loadOrderToForm(G.orders.find(x=>x.id==='${o.id}'))">✏️ แก้ไข</button>
+          <button class="btn-danger" style="padding:10px 14px" onclick="G.deleteOrder('${o.id}')">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+  },
 
-/* ───── HISTORY ───── */
-function HistoryPage({orders,onView,onEdit,onDelete,onNew}){
-  const [search,setSearch]=useState('');
-  const filtered=orders.filter(o=>{
-    const q=search.toLowerCase();
-    return !q||o.workerName?.toLowerCase().includes(q)||o.shopName?.toLowerCase().includes(q)||o.date?.includes(q);
-  });
-  if(orders.length===0)return(
-    <div style={{padding:'60px 20px',textAlign:'center',color:'#555'}}>
-      <div style={{fontSize:40,marginBottom:16}}>📋</div>
-      <div style={{fontSize:16,marginBottom:8}}>ยังไม่มีออร์เดอร์</div>
-      <div style={{fontSize:13,color:'#444',marginBottom:20}}>กดปุ่ม + สร้าง เพื่อเริ่มต้น</div>
-      <button style={btnStyle('accent')} onClick={onNew}>+ สร้างออร์เดอร์แรก</button>
-    </div>
-  );
-  return(
-    <div style={{padding:'16px',maxWidth:600,margin:'0 auto'}} className="no-print">
-      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="🔍 ค้นหาชื่อลูกค้า, วันที่..." style={{...inputStyle,marginBottom:16}}/>
-      <div style={{fontSize:12,color:'#555',marginBottom:12}}>{filtered.length} ออร์เดอร์</div>
-      {filtered.map(o=>{
-        const tot=totalShirts(o);
-        const bal=balance(o);
-        return(
-          <div key={o.id} style={{background:'#161616',border:'1px solid #252525',borderRadius:12,padding:'14px',marginBottom:10}}>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}>
-              <div>
-                <div style={{fontWeight:700,fontSize:15,marginBottom:2}}>{o.workerName||'(ไม่มีชื่อลูกค้า)'}</div>
-                <div style={{fontSize:12,color:'#666'}}>{o.date} · {o.sleeveType} · {o.fabric}</div>
-              </div>
-              <div style={{textAlign:'right'}}>
-                <div style={{fontSize:16,fontWeight:800,color:'#f59e0b'}}>{tot} ตัว</div>
-                <div style={{fontSize:12,color:'#555'}}>{o.colors.length} สี</div>
-              </div>
-            </div>
-            <div style={{display:'flex',gap:10,marginBottom:10}}>
-              {[['ยอด',o.totalPrice,'#60a5fa'],['มัด',o.deposit,'#f87171'],['เหลือ',bal,'#4ade80']].map(([label,val,color])=>(
-                <div key={label} style={{flex:1,background:'#111',borderRadius:7,padding:'6px 8px',textAlign:'center'}}>
-                  <div style={{fontSize:10,color:'#555',marginBottom:1}}>{label}</div>
-                  <div style={{fontSize:13,fontWeight:700,color}}>{fmtNum(val)}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{display:'flex',gap:6}}>
-              <button style={{...btnStyle('info'),flex:1,textAlign:'center'}} onClick={()=>onView(o)}>👁 ดูใบ</button>
-              <button style={{...btnStyle('default'),flex:1,textAlign:'center'}} onClick={()=>onEdit(o)}>✏️ แก้ไข</button>
-              <button style={{...btnStyle('danger'),padding:'10px 12px'}} onClick={()=>onDelete(o.id)}>🗑</button>
-            </div>
-          </div>
-        );
-      })}
-      <div style={{height:32}}/>
-    </div>
-  );
-}
+  viewFromHistory(id){
+    const o=this.orders.find(x=>x.id===id);if(!o)return;
+    this.viewOrder=o;this.renderPreview(o);this.goPage('preview');
+  },
 
-/* ───── APP ───── */
-export default function App(){
-  const [page,setPage]=useState('form');
-  const [order,setOrder]=useState(newOrder());
-  const [editId,setEditId]=useState(null);
-  const [orders,setOrders]=useState(loadLS());
-  const [viewOrder,setViewOrder]=useState(null);
+  deleteOrder(id){
+    if(!confirm('ลบออร์เดอร์นี้?'))return;
+    this.orders=this.orders.filter(o=>o.id!==id);
+    saveDB(this.orders);
+    this.updateHistoryTab();
+    this.renderHistory();
+    showToast('🗑 ลบแล้ว');
+  },
 
-  function persist(list){setOrders(list);saveLS(list);}
-  function handleSave(){
-    const saved={...order};
-    if(!editId)saved.createdAt=Date.now();
-    const list=editId?orders.map(o=>o.id===editId?saved:o):[saved,...orders];
-    persist(list);
-    setViewOrder(saved);
-    setEditId(null);
-    setPage('preview');
+  goPage(name){
+    ['form','preview','history'].forEach(p=>{
+      document.getElementById('page-'+p).classList.toggle('active',p===name);
+    });
+    document.getElementById('tab-form').classList.toggle('active',name==='form'||name==='preview');
+    document.getElementById('tab-history').classList.toggle('active',name==='history');
+    if(name==='history')this.renderHistory();
+    window.scrollTo(0,0);
   }
-  function startNew(){setOrder(newOrder());setEditId(null);setPage('form');}
-  function startEdit(o){setOrder(o);setEditId(o.id);setPage('form');}
-  function handleView(o){setViewOrder(o);setPage('preview');}
-  function handleDelete(id){if(confirm('ลบออร์เดอร์นี้?'))persist(orders.filter(o=>o.id!==id));}
+};
 
-  // When nav 'create' is clicked while in preview, go to form
-  function handleNavCreate(){
-    if(page==='form')return;
-    startNew();
-  }
-
-  return(
-    <>
-      <style>{`
-        @media print{
-          .no-print{display:none!important;}
-          .print-only{display:block!important;}
-          body{background:#fff!important;}
-        }
-      `}</style>
-      <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-        <Nav page={page} setPage={(p)=>{if(p==='form'){startNew();}else{setPage(p);}}} ordersLen={orders.length}/>
-        <div style={{flex:1}}>
-          {page==='form'&&<FormPage order={order} setOrder={setOrder} onSave={handleSave} isEdit={!!editId}/>}
-          {page==='preview'&&viewOrder&&<PreviewPage order={viewOrder} onNew={startNew} onEdit={()=>startEdit(viewOrder)} onHistory={()=>setPage('history')}/>}
-          {page==='history'&&<HistoryPage orders={orders} onView={handleView} onEdit={startEdit} onDelete={handleDelete} onNew={startNew}/>}
-        </div>
-      </div>
-      {/* Print-only content */}
-      {viewOrder&&(
-        <div className="print-only">
-          <OrderCard order={viewOrder}/>
-        </div>
-      )}
-    </>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+G.init();
 </script>
 </body>
 </html>
